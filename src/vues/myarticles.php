@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php include_once "./src/base.php" ?>
+    <?php include_once "../base.php" ?>
     <title>Journal de 16h55</title>
 </head>
 
@@ -33,27 +33,12 @@
         </nav>
 
     </header>
-    <div class="d-flex justify-content-center align-items-center" id="main-content">
-        <form action="#" id="myFormLogin">
-            <div class="d-flex flex-column justify-content-center align-items-center gap-1 p-1">
-                <div class="d-flex flex-column">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email">
-                </div>
-                <div class="d-flex flex-column">
-                    <label for="password">PASSWORD</label>
-                    <input type="password" name="password" id="password">
-                </div>
+   
+    <div id="myarticles"></div>
 
-                <input type="submit" value="Se connecter">
-                <div id="notification"></div>
-            </div>
-        </form>
-        
-    </div>
     <footer></footer>
 </body>
-<script src="/helpers/index.js"></script>
+<script src="/helpers/articles.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 </html>

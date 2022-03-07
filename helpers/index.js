@@ -1,3 +1,14 @@
+document.getElementById("myFormLogin").addEventListener("submit", ($e) => {
+  $e.preventDefault();
+
+  let username = $("#email").val();
+  let password = $("#password").val();
+
+  getToken(username, password).then( () => {
+      getArticles()
+  });
+});
+
 document.getElementById("myForm").addEventListener("submit", ($e) => {
   $e.preventDefault();
   getToken().then( (token) => {
@@ -9,13 +20,14 @@ document.getElementById("myForm").addEventListener("submit", ($e) => {
   });
 });
 
-async function getToken() {
+
+async function getToken(username = null, password = null) {
   let data = JSON.stringify({
-    username: "lory@lory.fr",
-    password: "lory",
+    username: username ?? "lory@lory.fr",
+    password: password ?? "lory",
   });
 
-  let token;
+  let token, refresh_token;
 
   await $.ajax({
     url: "http://127.0.0.1:8000/api/login_check",
@@ -25,7 +37,10 @@ async function getToken() {
     contentType: "application/json",
     success: (response) => {
       token = response?.token;
+      refresh_token = response?.refresh_token;
+      
       sessionStorage.setItem("token",token)
+      sessionStorage.setItem("refresh_token",refresh_token)
     },
     error: () => {
       console.log("Oups error");

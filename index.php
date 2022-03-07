@@ -1,3 +1,7 @@
+<?php 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,7 +36,7 @@
         </nav>
 
     </header>
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center" id="main-content">
         <form action="#" id="myForm">
             <div class="d-flex flex-column justify-content-center align-items-center gap-1 p-1">
                 <div class="d-flex flex-column">
@@ -45,9 +49,10 @@
                 </div>
 
                 <input type="submit" value="M'inscrire">
+                <div id="notification"></div>
             </div>
         </form>
-
+        
     </div>
     <footer></footer>
 </body>

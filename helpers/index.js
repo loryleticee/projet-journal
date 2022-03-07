@@ -1,29 +1,41 @@
 document.getElementById("myForm").addEventListener("submit", ($e) => {
   $e.preventDefault();
-  getToken()
+  getToken().then( (token) => {
+    subscribe(token).then(() => {
+      getArticles().then(articles => {
+        showArticles(articles)
+      })
+    })   
+  });
 });
 
-function getToken() {
+async function getToken() {
   let data = JSON.stringify({
     username: "lory@lory.fr",
     password: "lory",
   });
-  $.ajax({
+
+  let token;
+
+  await $.ajax({
     url: "http://127.0.0.1:8000/api/login_check",
     dataType: "json",
     type: "POST",
     data: data,
     contentType: "application/json",
     success: (response) => {
-      subscribe(response?.token);
+      token = response?.token;
+      sessionStorage.setItem("token",token)
     },
     error: () => {
       console.log("Oups error");
     },
   });
+
+  return token;
 }
 
-function subscribe(token) {
+async function subscribe(token) {
   let email = $("#email").val();
   let username = $("#email").val();
   let password = $("#password").val();
@@ -32,11 +44,11 @@ function subscribe(token) {
     email: email,
     username: username,
     password: password,
-    createdAt : (new Date()),
-    updateAt : (new Date())
+    createdAt: new Date(),
+    updateAt: new Date(),
   });
 
-  $.ajax({
+  await $.ajax({
     url: "http://127.0.0.1:8000/api/users",
     dataType: "json",
     type: "POST",
@@ -46,10 +58,59 @@ function subscribe(token) {
       Authorization: "Bearer " + token,
     },
     success: (response) => {
-      console.log(response.id ?? "Not excpected response")
+      console.log(response.id ?? "Not excpected response");
     },
     error: () => {
       console.log("Oups error");
+      $("#notification").html(
+        "<p>L'inscription n'a pa pu aboutir en raison d'un probleme avec serveur</p>"
+      );
     },
+  });
+}
+
+async function getArticles() {
+  return await $.ajax({
+    url: "http://localhost:8000/api/articles",
+    dataType: "json",
+    type: "GET",
+    contentType: "application/ld+json",
+    headers: {
+      Authorization: "Bearer " + sessionStorage.getItem("token"),
+    },
+    success: (articles) => {
+      if (! articles instanceof Array) {
+        return false; 
+      }
+      if (articles.length === 0) {
+        return false; 
+      }
+      getPage("/src/vues/articles.php", articles)
+    },  
+  });
+}
+
+
+function getPage(url, articles) {
+  $.ajax({
+    url: url,
+    dataType: "html",
+    success: (page) => {
+      $("#main-content").html(page)
+      showArticles(articles)
+    },  
+  });
+}
+
+
+function showArticles(articles) {
+  articles.forEach(article => {
+    let html = `
+      <div>
+        <h2>${article.title}</h2>
+        <p>${article.content}</p>
+      </div>
+    `
+    $("#content").append(html)
   });
 }
